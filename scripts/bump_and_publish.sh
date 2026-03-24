@@ -4,10 +4,10 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: scripts/publish.sh [patch|minor|major] [--dry-run]
+Usage: scripts/bump_and_publish.sh [patch|minor|major] [--dry-run]
 
 Bumps the package version based on the latest v* git tag, updates pyproject.toml,
-refreshes uv.lock, creates a release commit, tags it, and pushes the tag.
+refreshes uv.lock, creates a release commit, tags it, and pushes `main` plus the tag.
 
 Arguments:
   patch      Increment the patch version (default)
@@ -38,6 +38,12 @@ require_clean_worktree() {
   if [[ -n "$(git status --porcelain)" ]]; then
     die "working tree must be clean before publishing"
   fi
+}
+
+require_main_branch() {
+  local branch
+  branch="$(git branch --show-current)"
+  [[ "${branch}" == "main" ]] || die "publishing must be run from the main branch"
 }
 
 read_current_version() {
@@ -118,6 +124,7 @@ cd "${REPO_ROOT}"
 [[ -f pyproject.toml ]] || die "pyproject.toml not found"
 
 require_clean_worktree
+require_main_branch
 
 LAST_TAG="$(read_last_tag || true)"
 CURRENT_VERSION="$(read_current_version)"
@@ -159,9 +166,8 @@ else
 fi
 
 run git tag -a "${NEW_TAG}" -m "Release ${NEW_TAG}"
-run git push origin "${NEW_TAG}"
+run git push origin main "${NEW_TAG}"
 
 if [[ "${DRY_RUN}" == "false" ]]; then
-  log "Release tag ${NEW_TAG} pushed."
-  log "If you want the release commit on the branch as well, run: git push origin HEAD"
+  log "Release ${NEW_TAG} pushed to origin/main and as tag ${NEW_TAG}."
 fi

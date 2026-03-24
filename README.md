@@ -172,4 +172,5 @@ cleanup_gpu_mem()
 `cleanup_gpu_memory()` is an alias for `cleanup_gpu_mem()`.
 
 ## Publishing To PyPI
-Run `scripts/bump_and_publish.sh`
+Run `scripts/bump_and_publish.sh`.
+It bumps the version, refreshes `uv.lock`, creates a release commit, tags it, and pushes both `main` and the new release tag.
