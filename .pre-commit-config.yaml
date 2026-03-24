@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.4
+    hooks:
+      - id: ruff
+        types_or: [ python, pyi, jupyter]
+        args: [ --fix ]
+        exclude: ^notebooks/
+      - id: ruff-format
+        types_or: [ python, pyi, jupyter ]
+        exclude: ^notebooks/
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: uv run --frozen --extra dev pytest
+        language: system
+        pass_filenames: false
+        always_run: true

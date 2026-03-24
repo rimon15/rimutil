@@ -1,0 +1,51 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rm_utils"
+version = "0.0.1"
+description = "My utility functions for logging/config management, etc."
+requires-python = ">=3.13"
+dependencies = [
+    "loguru>=0.7.3",
+    "omegaconf>=2.3.0",
+    "tenacity>=9.1.4",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/rimon15/rm_utils"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.5",
+  "pre-commit>=4.2.0",
+  "ruff>=0.11.5",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+indent-width = 2
+line-length = 100
+extend-include = ["*.ipynb"]
+target-version = "py313"
+respect-gitignore = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = ["E402", "F401"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 100
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
